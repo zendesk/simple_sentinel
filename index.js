@@ -23,7 +23,7 @@ function start_redis(port, slaveof) {
 
   if(!silent) console.log('Starting redis:'+port);
   if(!which('redis-server')) {
-    console.err('Please install redis >2.8.4');
+    console.error('Please install redis >2.8.4');
     return(1);
   }
 
@@ -33,11 +33,11 @@ function start_redis(port, slaveof) {
 
   if (exec(redis_start).code !== 0) {
     if(test('-f', redis_log_file)) {
-      console.err('Failed to start redis. Here\'s the log:');
+      console.error('Failed to start redis. Here\'s the log:');
       cat(redis_log_file);
       return(1);
     }
-    console.err('Failed to start redis, bailing...');
+    console.error('Failed to start redis, bailing...');
     return(1);
   }
 
@@ -45,11 +45,11 @@ function start_redis(port, slaveof) {
 
   if(!redis_alive(port)) {
     if(test('-f', redis_log_file)) {
-      console.err('Redis failed ping, Here\'s the log:');
+      console.error('Redis failed ping, Here\'s the log:');
       cat(redis_log_file);
       return(1);
     }
-    console.err('Redis failed ping, bailing...');
+    console.error('Redis failed ping, bailing...');
     return(1);
   }
   if(!silent) console.log('success');
@@ -104,11 +104,11 @@ function start_sentinel(port, master_host, master_port) {
   if(!silent) console.log('Starting sentinel:'+port);
   if(exec(sentinel_start).code !== 0) {
     if(test('-f', sentinel_log_file)) {
-      console.err('Failed to start sentinel. Here\'s the log:');
+      console.error('Failed to start sentinel. Here\'s the log:');
       cat(sentinel_log_file);
       return(1);
     }
-    console.err('Failed to start sentinel, bailing...');
+    console.error('Failed to start sentinel, bailing...');
     return(1);
   }
 
@@ -116,11 +116,11 @@ function start_sentinel(port, master_host, master_port) {
 
   if(!sentinel_alive(port)) {
     if(test('-f', sentinel_log_file)) {
-      console.err('Sentinel failed ping. Here\'s the log:');
+      console.error('Sentinel failed ping. Here\'s the log:');
       cat(sentinel_log_file);
       return(1);
     }
-    console.err('Sentinel failed ping, bailing...');
+    console.error('Sentinel failed ping, bailing...');
     return(1);
   }
   if (!silent) console.log('success');

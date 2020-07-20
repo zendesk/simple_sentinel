@@ -2,6 +2,7 @@ node_modules/
 redis/*
 sentinel/*
 npm-debug.log
+*.swp
 
 # macos
 .DS_Store
