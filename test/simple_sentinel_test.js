@@ -2,7 +2,7 @@ var shell = require('shelljs');
 var assert         = require('assert');
 var SimpleSentinel = require('../index.js');
 
-const silent = false;
+const silent = true;
 process.env.noverbose = silent;
 describe('simple_sentinel', function() {
   describe('without config', function() {
