@@ -1,4 +1,4 @@
-require('shelljs/global');
+var shell = require('shelljs');
 var assert         = require('assert');
 var SimpleSentinel = require('../index.js');
 
@@ -8,16 +8,16 @@ describe('simple_sentinel', function() {
     it('should start redis and sentinel', function() {
       this.timeout(10000);
       assert.equal(0, SimpleSentinel.start(null));
-      assert.equal(0, exec('redis-cli -p 16379 ping', {silent: true}).code);
-      assert.equal(0, exec('redis-cli -p 26379 ping', {silent: true}).code);
-      assert.equal(0, exec('redis-cli -p 26379 sentinel master mymaster', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 16379 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 26379 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 26379 sentinel master mymaster', {silent: true}).code);
     });
 
     it('should stop redis and sentinel', function() {
       this.timeout(10000);
       assert.equal(0, SimpleSentinel.stop(null, true));
-      assert.ok(0 !== exec('redis-cli -p 16379 ping', {silent: true}).code);
-      assert.ok(0 !== exec('redis-cli -p 26379 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 16379 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 26379 ping', {silent: true}).code);
     });
   });
 
@@ -26,24 +26,24 @@ describe('simple_sentinel', function() {
     it('should start redis and sentinel', function() {
       this.timeout(10000);
       assert.equal(0, SimpleSentinel.start(config));
-      assert.equal(0, exec('redis-cli -p 16379 ping', {silent: true}).code);
-      assert.equal(0, exec('redis-cli -p 16380 ping', {silent: true}).code);
-      assert.equal(0, exec('redis-cli -p 16381 ping', {silent: true}).code);
-      assert.equal(0, exec('redis-cli -p 26379 ping', {silent: true}).code);
-      assert.equal(0, exec('redis-cli -p 26380 ping', {silent: true}).code);
-      assert.equal(0, exec('redis-cli -p 26381 ping', {silent: true}).code);
-      assert.equal(0, exec('redis-cli -p 26379 sentinel master mymaster', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 16379 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 16380 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 16381 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 26379 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 26380 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 26381 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 26379 sentinel master mymaster', {silent: true}).code);
     });
 
     it('should stop redis and sentinel', function() {
       this.timeout(10000);
       assert.equal(0, SimpleSentinel.stop(config));
-      assert.ok(0 !== exec('redis-cli -p 16379 ping', {silent: true}).code);
-      assert.ok(0 !== exec('redis-cli -p 16380 ping', {silent: true}).code);
-      assert.ok(0 !== exec('redis-cli -p 16381 ping', {silent: true}).code);
-      assert.ok(0 !== exec('redis-cli -p 26379 ping', {silent: true}).code);
-      assert.ok(0 !== exec('redis-cli -p 26380 ping', {silent: true}).code);
-      assert.ok(0 !== exec('redis-cli -p 26381 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 16379 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 16380 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 16381 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 26379 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 26380 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 26381 ping', {silent: true}).code);
     });
   });
 
@@ -52,15 +52,15 @@ describe('simple_sentinel', function() {
     it('should start redis', function() {
       this.timeout(10000);
       assert.equal(0, SimpleSentinel.start(config));
-      assert.equal(0, exec('redis-cli -p 16379 ping', {silent: true}).code);
-      assert.ok(0 !== exec('redis-cli -p 16380 ping', {silent: true}).code);
-      assert.ok(0 !== exec('redis-cli -p 26379 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 16379 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 16380 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 26379 ping', {silent: true}).code);
     });
 
     it('should stop redis', function() {
       this.timeout(10000);
       assert.equal(0, SimpleSentinel.stop(config));
-      assert.ok(0 !== exec('redis-cli -p 16379 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 16379 ping', {silent: true}).code);
     });
   });
 
@@ -69,14 +69,14 @@ describe('simple_sentinel', function() {
     it('should start sentinel', function() {
       this.timeout(10000);
       assert.equal(0, SimpleSentinel.start(config));
-      assert.equal(0, exec('redis-cli -p 26379 ping', {silent: true}).code);
-      assert.ok(0 !== exec('redis-cli -p 16379 ping', {silent: true}).code);
+      assert.equal(0, shell.exec('redis-cli -p 26379 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 16379 ping', {silent: true}).code);
     });
 
     it('should stop sentinel', function() {
       this.timeout(10000);
       assert.equal(0, SimpleSentinel.stop(config));
-      assert.ok(0 !== exec('redis-cli -p 26379 ping', {silent: true}).code);
+      assert.ok(0 !== shell.exec('redis-cli -p 26379 ping', {silent: true}).code);
     });
   });
 
