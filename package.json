@@ -6,7 +6,7 @@
   "license": "Apache V2",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --ui exports --reporter spec test/simple_sentinel_test.js"
+    "test": "./node_modules/.bin/mocha --reporter spec test/simple_sentinel_test.js"
   },
   "bin": "./bin/simple_sentinel",
   "dependencies": {
