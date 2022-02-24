@@ -1,6 +1,5 @@
 simple_sentinel
 ===============
-[![Build Status](https://travis-ci.org/vanchi-zendesk/simple_sentinel.svg?branch=v0.1.1)](https://travis-ci.org/vanchi-zendesk/simple_sentinel)
 
 A simple nodejs utility to start and stop a test sentinel and redis.
 Starts redis at port 16379 and sentinel at port 26379.

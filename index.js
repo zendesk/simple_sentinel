@@ -1,11 +1,11 @@
-require('shelljs/global');
+var shell = require('shelljs');
 
 function redis_alive(port, verbose){
-  return (exec('redis-cli -p '+port+' ping', { silent: !verbose }).code === 0);
+  return (shell.exec('redis-cli -p '+port+' ping', { silent: !verbose }).code === 0);
 }
 
 function sentinel_alive(port, verbose){
-  return (exec('redis-cli -p '+ port +' ping', { silent: !verbose }).code === 0);
+  return (shell.exec('redis-cli -p '+ port +' ping', { silent: !verbose }).code === 0);
 }
 
 function start_redis(port, slaveof) {
@@ -18,12 +18,12 @@ function start_redis(port, slaveof) {
                        ' --dir ' + redis_dir +
                        ' --loglevel verbose' +
                        ' --port '+port;
-  mkdir('-p', redis_dir);
-  rm('-f', redis_log_file);
+                       shell.mkdir('-p', redis_dir);
+                       shell.rm('-f', redis_log_file);
 
   if(!silent) console.log('Starting redis:'+port);
-  if(!which('redis-server')) {
-    console.err('Please install redis >2.8.4');
+  if(!shell.which('redis-server')) {
+    console.error('Please install redis >2.8.4');
     return(1);
   }
 
@@ -31,25 +31,25 @@ function start_redis(port, slaveof) {
     redis_start = redis_start + ' --slaveof '+slaveof;
   }
 
-  if (exec(redis_start).code !== 0) {
+  if (shell.exec(redis_start).code !== 0) {
     if(test('-f', redis_log_file)) {
-      console.err('Failed to start redis. Here\'s the log:');
+      console.error('Failed to start redis. Here\'s the log:');
       cat(redis_log_file);
       return(1);
     }
-    console.err('Failed to start redis, bailing...');
+    console.error('Failed to start redis, bailing...');
     return(1);
   }
 
-  exec('sleep 1');
+  shell.exec('sleep 1');
 
   if(!redis_alive(port)) {
     if(test('-f', redis_log_file)) {
-      console.err('Redis failed ping, Here\'s the log:');
-      cat(redis_log_file);
+      console.error('Redis failed ping, Here\'s the log:');
+      shell.cat(redis_log_file);
       return(1);
     }
-    console.err('Redis failed ping, bailing...');
+    console.error('Redis failed ping, bailing...');
     return(1);
   }
   if(!silent) console.log('success');
@@ -61,12 +61,12 @@ function stop_redis(port) {
   var redis_log_file = redis_dir + '/redis.log';
   if(!silent) console.log('Shutting down redis:'+port);
   if(redis_alive(port)) {
-    exec('redis-cli -p '+port+' shutdown');
+    shell.exec('redis-cli -p '+port+' shutdown');
   } else {
     if(!silent) console.log('already down');
   }
-  rm('-f', redis_log_file);
-  rm('-rf', redis_dir);
+  shell.rm('-f', redis_log_file);
+  shell.rm('-rf', redis_dir);
 }
 
 function build_sentinel_config(name, host, port) {
@@ -93,8 +93,8 @@ function start_sentinel(port, master_host, master_port) {
                            ' --pidfile ' + sentinel_pid_file +
                            ' --port ' + port +
                            ' --loglevel verbose';
-  mkdir('-p', sentinel_dir);
-  rm('-f', sentinel_log_file);
+                           shell.mkdir('-p', sentinel_dir);
+                           shell.rm('-f', sentinel_log_file);
 
   var fs = require('fs');
   var fd = fs.openSync(sentinel_conf_path, 'w');
@@ -102,25 +102,25 @@ function start_sentinel(port, master_host, master_port) {
   fs.closeSync(fd);
 
   if(!silent) console.log('Starting sentinel:'+port);
-  if(exec(sentinel_start).code !== 0) {
-    if(test('-f', sentinel_log_file)) {
-      console.err('Failed to start sentinel. Here\'s the log:');
-      cat(sentinel_log_file);
+  if(shell.exec(sentinel_start).code !== 0) {
+    if(shell.test('-f', sentinel_log_file)) {
+      console.error('Failed to start sentinel. Here\'s the log:');
+      shell.cat(sentinel_log_file);
       return(1);
     }
-    console.err('Failed to start sentinel, bailing...');
+    console.error('Failed to start sentinel, bailing...');
     return(1);
   }
 
-  exec('sleep 1');
+  shell.exec('sleep 1');
 
   if(!sentinel_alive(port)) {
     if(test('-f', sentinel_log_file)) {
-      console.err('Sentinel failed ping. Here\'s the log:');
+      console.error('Sentinel failed ping. Here\'s the log:');
       cat(sentinel_log_file);
       return(1);
     }
-    console.err('Sentinel failed ping, bailing...');
+    console.error('Sentinel failed ping, bailing...');
     return(1);
   }
   if (!silent) console.log('success');
@@ -136,21 +136,21 @@ function stop_sentinel(port) {
   if(sentinel_alive(port)) {
     var pid;
 
-    if(test('-f', sentinel_pid_file)) {
-      pid = exec('cat '+sentinel_pid_file, {silent:true}).output;
+    if(shell.test('-f', sentinel_pid_file)) {
+      pid = shell.exec('cat '+sentinel_pid_file, {silent:true}).stdout;
     } else {
-      pid = exec('redis-cli -p '+ port +' info | grep process_id | cut -d: -f2', {silent:true}).output;
+      pid = shell.exec('redis-cli -p '+ port +' info | grep process_id | cut -d: -f2', {silent:true}).stdout;
     }
     if(pid) {
       pid = parseInt(pid);
-      exec('kill -TERM ' + pid);
+      shell.exec('kill -TERM ' + pid);
     }
   } else {
     if(!silent) console.log('already down');
   }
-  rm('-f', sentinel_log_file);
-  rm('-f', sentinel_conf_path);
-  rm('-rf', sentinel_dir);
+  shell.rm('-f', sentinel_log_file);
+  shell.rm('-f', sentinel_conf_path);
+  shell.rm('-rf', sentinel_dir);
 }
 
 var default_config = {
