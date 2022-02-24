@@ -137,9 +137,9 @@ function stop_sentinel(port) {
     var pid;
 
     if(shell.test('-f', sentinel_pid_file)) {
-      pid = shell.exec('cat '+sentinel_pid_file, {silent:true}).output;
+      pid = shell.exec('cat '+sentinel_pid_file, {silent:true}).stdout;
     } else {
-      pid = shell.exec('redis-cli -p '+ port +' info | grep process_id | cut -d: -f2', {silent:true}).output;
+      pid = shell.exec('redis-cli -p '+ port +' info | grep process_id | cut -d: -f2', {silent:true}).stdout;
     }
     if(pid) {
       pid = parseInt(pid);
