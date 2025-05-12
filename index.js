@@ -175,7 +175,7 @@ module.exports = {
     }
     if(config.sentinel && config.sentinel.ports) {
       for(i = 0; i < config.sentinel.ports.length; i++) {
-        start_sentinel(config.sentinel.ports[i], 'localhost', (config.redis && config.redis.ports && config.redis.ports[0]));
+        start_sentinel(config.sentinel.ports[i], '127.0.0.1', (config.redis && config.redis.ports && config.redis.ports[0]));
       }
     }
     return(0);
