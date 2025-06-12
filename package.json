@@ -10,7 +10,7 @@
   },
   "bin": "./bin/simple_sentinel",
   "dependencies": {
-    "commander": "9.0.0",
+    "commander": "^14.0.0",
     "shelljs": "0.8.5"
   },
   "devDependencies": {
